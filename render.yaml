@@ -1,0 +1,35 @@
+services:
+  - type: web
+    name: accounts-api
+    runtime: docker
+    plan: free
+    branch: main
+    autoDeployTrigger: commit
+    healthCheckPath: /health
+    envVars:
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        value: "4000"
+      - key: DB_NAME
+        value: crud_usuarios
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_SSL_MODE
+        value: REQUIRED
+      - key: KAFKA_BOOTSTRAP_SERVERS
+        sync: false
+      - key: KAFKA_TOPIC
+        value: notificaciones
+      - key: KAFKA_SECURITY_PROTOCOL
+        value: SASL_SSL
+      - key: KAFKA_SASL_MECHANISM
+        value: SCRAM-SHA-256
+      - key: KAFKA_USERNAME
+        sync: false
+      - key: KAFKA_PASSWORD
+        sync: false
+      - key: KAFKA_CA_CERT
+        sync: false
