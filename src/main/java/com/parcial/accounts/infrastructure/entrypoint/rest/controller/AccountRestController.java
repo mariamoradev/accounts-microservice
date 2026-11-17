@@ -5,6 +5,7 @@ import com.parcial.accounts.application.port.in.GetAccountUseCase;
 import com.parcial.accounts.application.service.dto.command.CreateAccountCommand;
 import com.parcial.accounts.infrastructure.entrypoint.rest.dto.request.CreateAccountRestRequest;
 import com.parcial.accounts.infrastructure.entrypoint.rest.dto.response.AccountRestResponse;
+import com.parcial.accounts.infrastructure.entrypoint.rest.dto.response.AccountSummaryRestResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -55,5 +56,13 @@ public class AccountRestController {
   @GetMapping("/user/{userId}")
   public AccountRestResponse getByUserId(@PathVariable final String userId) {
     return AccountRestResponse.from(getAccountUseCase.getByUserId(userId));
+  }
+
+  @Operation(
+      summary =
+          "Guia 10: datos de la cuenta del usuario desde la cache Valkey (sin saldo)")
+  @GetMapping("/user/{userId}/summary")
+  public AccountSummaryRestResponse getSummaryByUserId(@PathVariable final String userId) {
+    return AccountSummaryRestResponse.from(getAccountUseCase.getSummaryByUserId(userId));
   }
 }

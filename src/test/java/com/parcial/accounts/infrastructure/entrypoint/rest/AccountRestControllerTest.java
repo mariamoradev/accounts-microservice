@@ -14,6 +14,7 @@ import com.parcial.accounts.application.port.in.CreateAccountUseCase;
 import com.parcial.accounts.application.port.in.GetAccountUseCase;
 import com.parcial.accounts.domain.exception.AccountAlreadyExistsException;
 import com.parcial.accounts.domain.exception.AccountNotFoundException;
+import com.parcial.accounts.domain.model.AccountSummaryModel;
 import com.parcial.accounts.infrastructure.entrypoint.rest.controller.AccountRestController;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -81,5 +82,19 @@ class AccountRestControllerTest {
         .thenThrow(AccountNotFoundException.becauseUserHasNoAccount("nadie"));
 
     mockMvc.perform(get("/api/accounts/user/nadie")).andExpect(status().isNotFound());
+  }
+
+  @Test
+  @DisplayName("GET /api/accounts/user/{userId}/summary responde sin saldo")
+  void shouldReturnSummaryWithoutBalance() throws Exception {
+    when(getAccountUseCase.getSummaryByUserId(TestData.USER_ID))
+        .thenReturn(AccountSummaryModel.from(TestData.account()));
+
+    mockMvc
+        .perform(get("/api/accounts/user/{userId}/summary", TestData.USER_ID))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.accountNumber").value(TestData.NUMBER))
+        .andExpect(jsonPath("$.status").value("ACTIVE"))
+        .andExpect(jsonPath("$.balance").doesNotExist());
   }
 }
